@@ -9,4 +9,4 @@ platform.ui talvez um nome de um bloco tenha sido renomeado, ou seja, o bloco "w
 ser igual ao "workbench_9" da rev 3, isso fará com que no arquivo, na rev 3, onde tinha workbench_9 terá workbench_8,
 isso poderá gerar confusão em ver qual o bloco é o correto, para evitar isso olhe o bloco workbench_8 na rev 2 (caso teste).
 
-Obs: Para rodar o 3° script, o elasticsearch precisa estar rodando e o Siamese configurdo
+Obs: Para rodar o 3° script, o elasticsearch precisa estar rodando e o Siamese configurado
