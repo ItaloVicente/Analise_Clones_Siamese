@@ -119,13 +119,16 @@ def create_review_revision_dict(caminho_do_arquivo):
         next(reader)  # Skip header row
 
         for row in reader:
-            review_number = row[1]
-            revision_number = int(row[2])
+            if(len(row)>2):
+                review_number = row[1]
+                revision_number = int(row[2])
 
-            if review_number in review_dict:
-                review_dict[review_number].append(revision_number)
+                if review_number in review_dict:
+                    review_dict[review_number].append(revision_number)
+                else:
+                    review_dict[review_number] = [revision_number]
             else:
-                review_dict[review_number] = [revision_number]
+                print(row)
 
     return review_dict
 def return_reviews_with_clones(caminho_type_clones):
@@ -319,9 +322,9 @@ with open(caminho_classification, newline='') as arquivo_csv:
                     last += 1
                 if verificador == False:
                     verificador2=True
-                    write_in_new_categoration_multipla(review, block, "individual", block_chronology, 1, distancia, block_position)
+                    write_in_new_categoration_multipla(review, block, "individual", block_chronology, 1/final_revision, distancia, block_position)
                 if verificador2 == False:
-                    write_in_new_categoration_multipla(review,block,"recorrente", block_chronology,duracao,distancia, block_position)
+                    write_in_new_categoration_multipla(review,block,"recorrente", block_chronology,duracao/final_revision,distancia, block_position)
         if linha[1] == "unica":
             if linha[2]!="no_clone" and linha[2]!= "uninteresting_clone":
                 dict_blocks = {}

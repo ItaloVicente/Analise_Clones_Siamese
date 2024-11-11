@@ -28,7 +28,6 @@ def analise_revisions(caminho_type_clones):
     return revisions
 
 def hash_file(file_path):
-    """Gera um hash SHA-256 para o conteúdo do arquivo."""
     hash_sha256 = hashlib.sha256()
     with open(file_path, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b""):
@@ -36,7 +35,7 @@ def hash_file(file_path):
     return hash_sha256.hexdigest()
 
 def verificar_blocos_com_hash(dict_revisions_blocks, project):
-    hash_map = {}  # Mapeia hash para informações do bloco
+    hash_map = {}
     blocos_iguais = set()
     blocos_diferentes = set()
 
@@ -53,16 +52,12 @@ def verificar_blocos_com_hash(dict_revisions_blocks, project):
                 block_info = (review, rev_num, block_name, block_num)
 
                 if block_hash in hash_map:
-                    # Verificar se já existe uma entrada com o mesmo hash
                     other_block_info = hash_map[block_hash]
                     if other_block_info[0] == review and other_block_info[1] != rev_num:
-                        if (block_info, other_block_info) not in blocos_iguais and (other_block_info, block_info) not in blocos_iguais:
-                            blocos_iguais.add((block_info, other_block_info))
+                        blocos_iguais.add((block_info, other_block_info))
                 else:
-                    # Adicionar nova entrada no hash_map
                     hash_map[block_hash] = block_info
 
-                # Verificar blocos diferentes na mesma revisão
                 for other_review_block, other_blocks in dict_revisions_blocks.items():
                     other_review, other_rev_num = other_review_block.split('_')
                     if review == other_review and rev_num != other_rev_num:
@@ -76,19 +71,16 @@ def verificar_blocos_com_hash(dict_revisions_blocks, project):
                                 if os.path.exists(path_other_block):
                                     other_block_hash = hash_file(path_other_block)
                                     if block_hash != other_block_hash:
-                                        if (review_block, block, other_review_block) not in blocos_diferentes and (other_review_block, block, review_block) not in blocos_diferentes:
-                                            blocos_diferentes.add((review_block, block, other_review_block))
+                                        blocos_diferentes.add((review_block, block, other_review_block))
 
     return list(blocos_iguais), list(blocos_diferentes)
 
 def transitive_closure(blocos_iguais):
-    # Construir o grafo
     graph = defaultdict(set)
     for bloco1, bloco2 in blocos_iguais:
         graph[bloco1].add(bloco2)
         graph[bloco2].add(bloco1)
 
-    # Encontrar componentes conexos
     def dfs(node, visited, component):
         stack = [node]
         while stack:
@@ -108,7 +100,6 @@ def transitive_closure(blocos_iguais):
             dfs(node, visited, component)
             componentes_conexos.append(component)
 
-    # Encontrar a menor revisão em cada componente conexo
     blocos_iguais_final = set()
     for component in componentes_conexos:
         menor_revisao = min(component, key=lambda x: int(x[1]))
@@ -120,7 +111,7 @@ def transitive_closure(blocos_iguais):
 def modificar_csv(caminho_type_clones, linhas):
     with open(caminho_type_clones, 'w', newline='') as csvfile:
         escritor_csv = csv.writer(csvfile, delimiter='\t')
-        escritor_csv.writerows(linhas)  # Escrever todas as linhas (incluindo o cabeçalho)
+        escritor_csv.writerows(linhas)
 
 PROJECT = "platform.ui"
 caminho_do_arquivo = 'metadata/' + PROJECT + '.csv'
