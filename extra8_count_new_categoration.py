@@ -14,7 +14,7 @@ def write_in_csv_multipla(type_clone, reviews, blocks):
         writer = csv.writer(csv_file)
         writer.writerow([type_clone, reviews, blocks])
 
-PROJECT = "platform.ui"
+PROJECT = "couchbase-jvm-core"
 caminho_new_categoration_multipla = "new categoration/" + PROJECT + "(tipo_multipla)" + ".csv"
 caminho_new_categoration_unica = "new categoration/" + PROJECT + "(tipo_unica)" + ".csv"
 caminho_new_categoration = "classification/" + PROJECT + ".csv"
@@ -72,9 +72,7 @@ with open(caminho_new_categoration_unica, newline='') as arquivo_csv:
     blocks = 0
     int_review = 0
     for linha in leitor_csv:
-        if linha[2] == "no_clone":
-            no_clone_review+=1
-        elif linha[2] == "uninteresting_clone":
+        if linha[2] == "uninteresting_clone":
             clone_irrelevante_block+=1
         elif linha[2] == "review with at least one clone":
             clone_relevante_block+=1
@@ -101,7 +99,6 @@ with open(caminho_new_categoration_unica, newline='') as arquivo_csv:
     write_in_csv_unica("irrelevantes", clone_irrelevante_review, clone_irrelevante_block)
     write_in_csv_unica("relevantes", clone_relevante_review, clone_relevante_block)
     write_in_csv_unica("total", int_review, blocks)
-import csv
 
 
 def normalize_string(s):
